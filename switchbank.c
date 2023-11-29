@@ -89,19 +89,23 @@ static const setting_group_detail_t macro_groups [] = {
 };
 
 static const setting_detail_t switchbank_settings[] = {
-    { Setting_UserDefined_6, Group_AuxPorts, "Aux Output 0 Function", NULL, Format_RadioButtons,  "M62-M65,Spindle/Laser Enable(M3/M4),Flood Enable (M7),Mist Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[0], NULL, NULL },
-    { Setting_UserDefined_7, Group_AuxPorts, "Aux Output 1 Function", NULL, Format_RadioButtons,  "M62-M65,Spindle/Laser Enable(M3/M4),Flood Enable (M7),Mist Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[1], NULL, NULL },
-    { Setting_UserDefined_8, Group_AuxPorts, "Aux Output 2 Function", NULL, Format_RadioButtons,  "M62-M65,Spindle/Laser Enable(M3/M4),Flood Enable (M7),Mist Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[2], NULL, NULL },
-    { Setting_UserDefined_9, Group_AuxPorts, "Aux Output 3 Function", NULL, Format_RadioButtons,  "M62-M65,Spindle/Laser Enable(M3/M4),Flood Enable (M7),Mist Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[3], NULL, NULL },
+    { Setting_UserDefined_6, Group_AuxPorts, "Aux Output 0 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Flood Enable (M7),Mist Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[0], NULL, NULL },
+    { Setting_UserDefined_7, Group_AuxPorts, "Aux Output 1 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Flood Enable (M7),Mist Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[1], NULL, NULL },
+    { Setting_UserDefined_8, Group_AuxPorts, "Aux Output 2 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Flood Enable (M7),Mist Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[2], NULL, NULL },
+    { Setting_UserDefined_9, Group_AuxPorts, "Aux Output 3 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Flood Enable (M7),Mist Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[3], NULL, NULL },
 };
 
 #ifndef NO_SETTINGS_DESCRIPTIONS
 
 static const setting_descr_t switchbank_settings_descr[] = {
-    { Setting_UserDefined_6, "Connect Switchbank pin to this action" },
-    { Setting_UserDefined_7, "Connect Switchbank pin to this action" },
-    { Setting_UserDefined_8, "Connect Switchbank pin to this action" },
-    { Setting_UserDefined_9, "Connect Switchbank pin to this action"  },
+    { Setting_UserDefined_6, "Connect Switchbank pin to this action\\n\\n"
+                             "NOTE: Control with M62-M65 is always active" },
+    { Setting_UserDefined_7, "Connect Switchbank pin to this action\\n\\n"
+                             "NOTE: Control with M62-M65 is always active" },
+    { Setting_UserDefined_8, "Connect Switchbank pin to this action\\n\\n"
+                             "NOTE: Control with M62-M65 is always active" },
+    { Setting_UserDefined_9, "Connect Switchbank pin to this action\\n\\n"
+                             "NOTE: Control with M62-M65 is always active"  },
 
 };
 
@@ -142,26 +146,27 @@ static void switchbank_settings_load (void)
     // If port mapping is available try to claim ports as configured.
     if(can_map_ports && (n_ports >= N_SWITCHBANK)) {
 
-        //just claim them explicitly so that we can have unique names.
+        //we do not want to actually claim the pins because we still want to be able to use M62-M65 with them.
         idx--;
-        port[idx] = idx;          
-        if(!ioport_claim(Port_Digital, Port_Output, &port[idx], "SwitchBank 3 pin"))   // Try to claim the port.
-            port[idx] = 0xFF;                                                       // If not successful flag it as not claimed.
+        port[idx] = idx;
+        //we do not want to        
+        //if(!ioport_claim(Port_Digital, Port_Output, &port[idx], "SwitchBank 3 pin"))   // Try to claim the port.
+        //    port[idx] = 0xFF;                                                       // If not successful flag it as not claimed.
 
         idx--;
         port[idx] = idx;          
-        if(!ioport_claim(Port_Digital, Port_Output, &port[idx], "SwitchBank 2 pin"))   // Try to claim the port.
-            port[idx] = 0xFF;     
+        //if(!ioport_claim(Port_Digital, Port_Output, &port[idx], "SwitchBank 2 pin"))   // Try to claim the port.
+        //    port[idx] = 0xFF;     
 
         idx--;
         port[idx] = idx;          
-        if(!ioport_claim(Port_Digital, Port_Output, &port[idx], "SwitchBank 1 pin"))   // Try to claim the port.
-            port[idx] = 0xFF;     
+        //if(!ioport_claim(Port_Digital, Port_Output, &port[idx], "SwitchBank 1 pin"))   // Try to claim the port.
+        //    port[idx] = 0xFF;     
 
         idx--;
         port[idx] = idx;          
-        if(!ioport_claim(Port_Digital, Port_Output, &port[idx], "SwitchBank 0 pin"))   // Try to claim the port.
-            port[idx] = 0xFF;                                            
+        //if(!ioport_claim(Port_Digital, Port_Output, &port[idx], "SwitchBank 0 pin"))   // Try to claim the port.
+        //    port[idx] = 0xFF;                                            
     }  else{
         protocol_enqueue_rt_command(no_ports);
     }
@@ -194,20 +199,6 @@ static void onSpindleProgrammed(spindle_ptrs_t *spindle, spindle_state_t state, 
         if(plugin_settings.function[idx] == SPINDLE_ACTIVE)
             hal.port.digital_out(port[idx], state.on);
     }
-}
-
-static void onOverrideChanged(override_changed_t override){
-
-    if(on_override_changed)
-        on_override_changed(override);    
-
-}
-
-static void onAccessoryOverride(uint8_t cmd){
-
-    if(on_unknown_accessory_override)
-        on_unknown_accessory_override(cmd);       
-
 }
 
 static void onCoolantSetState (coolant_state_t state)
