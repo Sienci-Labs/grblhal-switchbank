@@ -51,6 +51,7 @@ static on_execute_realtime_ptr on_execute_realtime, on_execute_delay;
 static on_override_changed_ptr on_override_changed;
 static on_spindle_programmed_ptr on_spindle_programmed;
 static on_unknown_accessory_override_ptr on_unknown_accessory_override;
+static coolant_set_state_ptr coolant_set_state_;
 
 static uint32_t polling_ms = 0;
 
@@ -193,34 +194,40 @@ static void onSpindleProgrammed(spindle_ptrs_t *spindle, spindle_state_t state, 
         if(plugin_settings.function[idx] == SPINDLE_ACTIVE)
             hal.port.digital_out(port[idx], state.on);
     }
-
 }
 
 static void onOverrideChanged(override_changed_t override){
 
     if(on_override_changed)
-        on_override_changed(override);
-
-    uint_fast8_t idx = N_SWITCHBANK;        
-
-    while(idx){
-        idx--;
-        if(plugin_settings.function[idx] == COOLANT_MIST_ACTIVE)
-            hal.port.digital_out(port[idx], hal.coolant.get_state().mist);
-    }
-
-    while(idx){
-        idx--;
-        if(plugin_settings.function[idx] == COOLANT_FLOOD_ACTIVE)
-            hal.port.digital_out(port[idx], hal.coolant.get_state().flood);
-    }            
+        on_override_changed(override);    
 
 }
 
 static void onAccessoryOverride(uint8_t cmd){
 
     if(on_unknown_accessory_override)
-        on_unknown_accessory_override(cmd);
+        on_unknown_accessory_override(cmd);       
+
+}
+
+static void onCoolantSetState (coolant_state_t state)
+{
+    coolant_set_state_(state);
+
+    uint_fast8_t idx = N_SWITCHBANK;        
+
+    while(idx){
+        idx--;
+        if(plugin_settings.function[idx] == COOLANT_MIST_ACTIVE)
+            hal.port.digital_out(port[idx], state.mist);
+    }
+
+    idx = N_SWITCHBANK;
+    while(idx){
+        idx--;
+        if(plugin_settings.function[idx] == COOLANT_FLOOD_ACTIVE)
+            hal.port.digital_out(port[idx], state.flood);
+    }      
 
 }
 
@@ -275,14 +282,17 @@ void switchbank_init (void)
         on_execute_delay = grbl.on_execute_delay;
         grbl.on_execute_delay = button_poll_delay;    
 
-        on_override_changed = grbl.on_override_changed;             // Subscribe to the event by saving away the original
-        grbl.on_override_changed = onOverrideChanged;              // function pointer and adding ours to the chain.     
+        //on_override_changed = grbl.on_override_changed;             // Subscribe to the event by saving away the original
+        //grbl.on_override_changed = onOverrideChanged;              // function pointer and adding ours to the chain.     
 
         on_spindle_programmed = grbl.on_spindle_programmed;             // Subscribe to the event by saving away the original
         grbl.on_spindle_programmed = onSpindleProgrammed;              // function pointer and adding ours to the chain.     
 
-        on_unknown_accessory_override = grbl.on_unknown_accessory_override;             // Subscribe to the event by saving away the original
-        grbl.on_unknown_accessory_override = onAccessoryOverride;              // function pointer and adding ours to the chain.                          
+        //on_unknown_accessory_override = grbl.on_unknown_accessory_override;             // Subscribe to the event by saving away the original
+        //grbl.on_unknown_accessory_override = onAccessoryOverride;              // function pointer and adding ours to the chain.
+
+        coolant_set_state_ = hal.coolant.set_state;
+        hal.coolant.set_state = onCoolantSetState;                                
 
         // Hook into the driver reset chain so we
         // can restore normal operation if a reset happens
