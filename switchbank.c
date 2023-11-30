@@ -29,9 +29,9 @@
 
 //the index of this array must match the radio button descriptions
 typedef enum {  MCODE, 
-                SPINDLE_ACTIVE, 
-                COOLANT_MIST_ACTIVE, 
-                COOLANT_FLOOD_ACTIVE, 
+                SPINDLE_ACTIVE,  
+                COOLANT_FLOOD_ACTIVE,
+                COOLANT_MIST_ACTIVE
 } aux_function_t;
 
 typedef struct {
@@ -40,7 +40,7 @@ typedef struct {
 
 static bool can_map_ports = false;
 static uint8_t n_ports;
-uint8_t port[N_SWITCHBANK];
+static uint8_t port[N_SWITCHBANK];
 static char max_port[4];
 static nvs_address_t nvs_address;
 static on_report_options_ptr on_report_options;
@@ -48,9 +48,7 @@ static switchbank_settings_t plugin_settings;
 static driver_reset_ptr driver_reset;
 
 static on_execute_realtime_ptr on_execute_realtime, on_execute_delay;
-static on_override_changed_ptr on_override_changed;
 static on_spindle_programmed_ptr on_spindle_programmed;
-static on_unknown_accessory_override_ptr on_unknown_accessory_override;
 static coolant_set_state_ptr coolant_set_state_;
 
 static uint32_t polling_ms = 0;
@@ -59,29 +57,6 @@ static uint32_t polling_ms = 0;
 static void plugin_reset (void)
 {
     driver_reset(); // Call the next reset handler in the chain.
-}
-
-static void poll_buttons (void){
-    
-    uint32_t ms = hal.get_elapsed_ticks();
-    if(ms < polling_ms + 50)
-        return;
-
-    polling_ms = ms;    
-}
-
-static void button_poll_realtime (sys_state_t grbl_state)
-{
-    on_execute_realtime(grbl_state);
-
-    //poll_buttons();
-}
-
-static void button_poll_delay (sys_state_t grbl_state)
-{
-    on_execute_delay(grbl_state);
-
-    //poll_buttons();
 }
 
 static const setting_group_detail_t macro_groups [] = {
@@ -265,13 +240,6 @@ void switchbank_init (void)
         // Add our plugin to the $I options report.
         on_report_options = grbl.on_report_options;
         grbl.on_report_options = report_options;
-
-        //add polling of button state to realtime and delay chains
-        on_execute_realtime = grbl.on_execute_realtime;
-        grbl.on_execute_realtime = button_poll_realtime;
-
-        on_execute_delay = grbl.on_execute_delay;
-        grbl.on_execute_delay = button_poll_delay;    
 
         //on_override_changed = grbl.on_override_changed;             // Subscribe to the event by saving away the original
         //grbl.on_override_changed = onOverrideChanged;              // function pointer and adding ours to the chain.     
