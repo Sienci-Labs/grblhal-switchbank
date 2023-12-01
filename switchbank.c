@@ -167,6 +167,11 @@ static void onSpindleProgrammed(spindle_ptrs_t *spindle, spindle_state_t state, 
     if(on_spindle_programmed)
         on_spindle_programmed(spindle, state, rpm, mode);
 
+    sys_state_t current_state = state_get();
+
+    if (current_state == STATE_CHECK_MODE)
+        return;        
+
     uint_fast8_t idx = N_SWITCHBANK;
 
     while(idx){
@@ -179,6 +184,11 @@ static void onSpindleProgrammed(spindle_ptrs_t *spindle, spindle_state_t state, 
 static void onCoolantSetState (coolant_state_t state)
 {
     coolant_set_state_(state);
+
+    sys_state_t current_state = state_get();
+
+    if (current_state == STATE_CHECK_MODE)
+        return;
 
     uint_fast8_t idx = N_SWITCHBANK;        
 
