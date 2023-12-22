@@ -30,8 +30,8 @@
 //the index of this array must match the radio button descriptions
 typedef enum {  MCODE, 
                 SPINDLE_ACTIVE,  
-                COOLANT_FLOOD_ACTIVE,
-                COOLANT_MIST_ACTIVE
+                COOLANT_MIST_ACTIVE,
+                COOLANT_FLOOD_ACTIVE
 } aux_function_t;
 
 typedef struct {
@@ -64,10 +64,10 @@ static const setting_group_detail_t macro_groups [] = {
 };
 
 static const setting_detail_t switchbank_settings[] = {
-    { Setting_UserDefined_6, Group_AuxPorts, "Aux Output 0 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Flood Enable (M7),Mist Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[0], NULL, NULL },
-    { Setting_UserDefined_7, Group_AuxPorts, "Aux Output 1 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Flood Enable (M7),Mist Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[1], NULL, NULL },
-    { Setting_UserDefined_8, Group_AuxPorts, "Aux Output 2 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Flood Enable (M7),Mist Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[2], NULL, NULL },
-    { Setting_UserDefined_9, Group_AuxPorts, "Aux Output 3 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Flood Enable (M7),Mist Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[3], NULL, NULL },
+    { Setting_UserDefined_6, Group_AuxPorts, "Aux Output 0 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Mist Enable (M7),Flood Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[0], NULL, NULL },
+    { Setting_UserDefined_7, Group_AuxPorts, "Aux Output 1 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Mist Enable (M7),Flood Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[1], NULL, NULL },
+    { Setting_UserDefined_8, Group_AuxPorts, "Aux Output 2 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Mist Enable (M7),Flood Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[2], NULL, NULL },
+    { Setting_UserDefined_9, Group_AuxPorts, "Aux Output 3 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Mist Enable (M7),Flood Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[3], NULL, NULL },
 };
 
 #ifndef NO_SETTINGS_DESCRIPTIONS
