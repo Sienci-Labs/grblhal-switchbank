@@ -53,12 +53,6 @@ static coolant_set_state_ptr coolant_set_state_;
 
 static uint32_t polling_ms = 0;
 
-// Called on a soft reset so that normal operation can be restored.
-static void plugin_reset (void)
-{
-    driver_reset(); // Call the next reset handler in the chain.
-}
-
 static const setting_group_detail_t macro_groups [] = {
     { Group_Root, Group_AuxPorts, "Aux ports"}
 };
@@ -203,6 +197,36 @@ static void onCoolantSetState (coolant_state_t state)
         idx--;
         if(plugin_settings.function[idx] == COOLANT_FLOOD_ACTIVE)
             hal.port.digital_out(port[idx], state.flood);
+    }      
+
+}
+
+// Called on a soft reset so that normal operation can be restored.
+static void plugin_reset (void)
+{
+    driver_reset(); // Call the next reset handler in the chain.
+
+    uint_fast8_t idx = N_SWITCHBANK;
+
+    while(idx){
+        idx--;
+        if(plugin_settings.function[idx] == SPINDLE_ACTIVE)
+            hal.port.digital_out(port[idx], 0);
+    }
+
+    idx = N_SWITCHBANK;        
+
+    while(idx){
+        idx--;
+        if(plugin_settings.function[idx] == COOLANT_MIST_ACTIVE)
+            hal.port.digital_out(port[idx], 0);
+    }
+
+    idx = N_SWITCHBANK;
+    while(idx){
+        idx--;
+        if(plugin_settings.function[idx] == COOLANT_FLOOD_ACTIVE)
+            hal.port.digital_out(port[idx], 0);
     }      
 
 }
