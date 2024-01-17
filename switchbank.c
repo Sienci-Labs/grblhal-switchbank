@@ -47,11 +47,8 @@ static on_report_options_ptr on_report_options;
 static switchbank_settings_t plugin_settings;
 static driver_reset_ptr driver_reset;
 
-static on_execute_realtime_ptr on_execute_realtime, on_execute_delay;
 static on_spindle_programmed_ptr on_spindle_programmed;
 static coolant_set_state_ptr coolant_set_state_;
-
-static uint32_t polling_ms = 0;
 
 static const setting_group_detail_t switchbank_groups [] = {
     { Group_Root, Group_AuxPorts, "Aux ports"}
