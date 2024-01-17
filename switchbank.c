@@ -53,7 +53,7 @@ static coolant_set_state_ptr coolant_set_state_;
 
 static uint32_t polling_ms = 0;
 
-static const setting_group_detail_t macro_groups [] = {
+static const setting_group_detail_t switchbank_groups [] = {
     { Group_Root, Group_AuxPorts, "Aux ports"}
 };
 
@@ -143,8 +143,8 @@ static void switchbank_settings_load (void)
 
 // Settings descriptor used by the core when interacting with this plugin.
 static setting_details_t setting_details = {
-    .groups = macro_groups,
-    .n_groups = sizeof(macro_groups) / sizeof(setting_group_detail_t),
+    .groups = switchbank_groups,
+    .n_groups = sizeof(switchbank_groups) / sizeof(setting_group_detail_t),
     .settings = switchbank_settings,
     .n_settings = sizeof(switchbank_settings) / sizeof(setting_detail_t),
 #ifndef NO_SETTINGS_DESCRIPTIONS
