@@ -55,23 +55,19 @@ static const setting_group_detail_t switchbank_groups [] = {
 };
 
 static const setting_detail_t switchbank_settings[] = {
-    { Setting_UserDefined_6, Group_AuxPorts, "Aux Output 0 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Mist Enable (M7),Flood Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[0], NULL, NULL },
-    { Setting_UserDefined_7, Group_AuxPorts, "Aux Output 1 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Mist Enable (M7),Flood Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[1], NULL, NULL },
-    { Setting_UserDefined_8, Group_AuxPorts, "Aux Output 2 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Mist Enable (M7),Flood Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[2], NULL, NULL },
-    { Setting_UserDefined_9, Group_AuxPorts, "Aux Output 3 Function", NULL, Format_RadioButtons,  "M62-M65 Only,Spindle/Laser Enable(M3/M4),Mist Enable (M7),Flood Enable(M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[3], NULL, NULL },
+    { Setting_UserDefined_6, Group_AuxPorts, "Aux output 0 trigger", NULL, Format_RadioButtons,  "M62-M65 only,Spindle/Laser enable (M3/M4),Mist enable (M7),Flood enable (M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[0], NULL, NULL },
+    { Setting_UserDefined_7, Group_AuxPorts, "Aux output 1 trigger", NULL, Format_RadioButtons,  "M62-M65 only,Spindle/Laser enable (M3/M4),Mist enable (M7),Flood enable (M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[1], NULL, NULL },
+    { Setting_UserDefined_8, Group_AuxPorts, "Aux output 2 trigger", NULL, Format_RadioButtons,  "M62-M65 only,Spindle/Laser enable (M3/M4),Mist enable (M7),Flood enable (M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[2], NULL, NULL },
+    { Setting_UserDefined_9, Group_AuxPorts, "Aux output 3 trigger", NULL, Format_RadioButtons,  "M62-M65 only,Spindle/Laser enable (M3/M4),Mist enable (M7),Flood enable (M8)", NULL, NULL, Setting_NonCore, &plugin_settings.function[3], NULL, NULL },
 };
 
 #ifndef NO_SETTINGS_DESCRIPTIONS
 
 static const setting_descr_t switchbank_settings_descr[] = {
-    { Setting_UserDefined_6, "Connect Switchbank pin to this action\\n\\n"
-                             "NOTE: Control with M62-M65 is always active" },
-    { Setting_UserDefined_7, "Connect Switchbank pin to this action\\n\\n"
-                             "NOTE: Control with M62-M65 is always active" },
-    { Setting_UserDefined_8, "Connect Switchbank pin to this action\\n\\n"
-                             "NOTE: Control with M62-M65 is always active" },
-    { Setting_UserDefined_9, "Connect Switchbank pin to this action\\n\\n"
-                             "NOTE: Control with M62-M65 is always active"  },
+    { Setting_UserDefined_6, "A second, more common action can be assigned to trigger this output. M62/63 P# is always available as a buffered on/off or M64/65 P# as an immediate on/off." },
+    { Setting_UserDefined_7, "A second, more common action can be assigned to trigger this output. M62/63 P# is always available as a buffered on/off or M64/65 P# as an immediate on/off." },
+    { Setting_UserDefined_8, "A second, more common action can be assigned to trigger this output. M62/63 P# is always available as a buffered on/off or M64/65 P# as an immediate on/off." },
+    { Setting_UserDefined_9, "A second, more common action can be assigned to trigger this output. M62/63 P# is always available as a buffered on/off or M64/65 P# as an immediate on/off."  },
 
 };
 
@@ -234,7 +230,7 @@ static void report_options (bool newopt)
     on_report_options(newopt);
 
     if(!newopt)
-        hal.stream.write("[PLUGIN:SwitchBank plugin v0.01]" ASCII_EOL);
+        hal.stream.write("[PLUGIN:SwitchBank plugin v0.02]" ASCII_EOL);
 }
 
 static void warning_msg (uint_fast16_t state)
