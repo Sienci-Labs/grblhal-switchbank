@@ -82,12 +82,12 @@ static void switchbank_settings_save (void)
 // Restore default settings and write to non volatile storage (NVS).
 static void switchbank_settings_restore (void)
 {
-    uint_fast8_t idx = N_SWITCHBANK;
 
-    // Register default functions.
-    for(idx = 0; idx < N_SWITCHBANK; idx++) {
-            plugin_settings.function[idx] = MCODE;
-    };
+    // Register N_SWITCHBANK default functions.
+    plugin_settings.function[0] = SPINDLE_ACTIVE;
+    plugin_settings.function[1] = COOLANT_FLOOD_ACTIVE;
+    plugin_settings.function[2] = SPINDLE_ACTIVE;
+    plugin_settings.function[3] = COOLANT_FLOOD_ACTIVE;
 
     hal.nvs.memcpy_to_nvs(nvs_address, (uint8_t *)&plugin_settings, sizeof(switchbank_settings_t), true);
 }
